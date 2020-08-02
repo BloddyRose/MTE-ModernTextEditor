@@ -11,7 +11,15 @@ The New button dosen't  but I will solve
 
 
 
-## Leave a start
+## Leave a Star 
+
+     /\
+____/  \____
+\          /
+ >        <
+/___    ___\
+    \  /
+     \/
 
 
 
