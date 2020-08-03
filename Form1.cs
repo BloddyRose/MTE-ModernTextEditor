@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
@@ -7,64 +6,53 @@ namespace ModernTextEditor
 {
     public partial class Form1 : Form
     {
+        private string path = "";
         public Form1()
         {
+
             InitializeComponent();
+
         }
 
         private readonly OpenFileDialog dialog = new OpenFileDialog();
+        private readonly SaveFileDialog saveFileDialog = new SaveFileDialog();
         private readonly FontDialog fontDlg = new FontDialog();
+
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
 
         }
 
+        private void exitPrompt()
+        {
+            DialogResult = MessageBox.Show("Do you want to save current file?",
+                "MTE",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2);
+        }
 
 
         private void fileNewButton_Click(object sender, EventArgs e)
         {
-            /*
-            dialog.RestoreDirectory = true;
-
-            dialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-            dialog.FilterIndex = 2;
-            dialog.RestoreDirectory = true;
-            dialog.InitialDirectory = @"C:\";
-            dialog.Title = "Create new file";
-            dialog.CheckFileExists = true;
-            dialog.CheckPathExists = true;
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (TextInput.Text != "")
             {
+                exitPrompt();
 
-                string filename = dialog.FileName;
-
-                try
+                if (DialogResult == DialogResult.Yes)
                 {
-                    if (File.Exists(filename))
-                    {
-                        File.Delete(filename);
-                    }
-
-                    var file = File.Create(filename);
-                    TextInput.Text = file.ToString();
+                    saveasButton_Click(sender, e);
+                    TextInput.Text = "";
+                    path = "";
                 }
-                catch (Exception erorr)
+                else if (DialogResult == DialogResult.No)
                 {
-                    // Code message
-                    MessageBox.Show("Erorr at making " + erorr, "Erorr", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    TextInput.Text = "";
+                    path = "";
                 }
-                
-             }
-             */
-                
-            
-
-       
+            }
         }
-
-    
-
         #region Exit
         private void exitButton_Click(object sender, EventArgs e)
         {
@@ -77,11 +65,11 @@ namespace ModernTextEditor
             dialog.Title = "Select a file";
             dialog.DefaultExt = ".txt";
 
-
             try
             {
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
+
                     string filename = dialog.FileName;
 
                     string text = System.IO.File.ReadAllText(filename);
@@ -104,19 +92,12 @@ namespace ModernTextEditor
         private void SaveButton_Click(object sender, EventArgs e)
         {
 
-            try
-            {
-                string filename = dialog.FileName;
-                string saveFile = dialog.SafeFileName;
+            string filename = dialog.FileName;
+            string saveFile = dialog.SafeFileName;
 
-                string text = TextInput.Text;
+            string text = TextInput.Text;
 
-                File.WriteAllText(filename, text);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Erorr at saving file " + ex, "Erorr", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            File.WriteAllText(filename, text);
 
         }
         #endregion
@@ -152,7 +133,8 @@ namespace ModernTextEditor
 
         private void aboutButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("This is an modern notepad maded in C# by me for a little project the use of it is simple like old notepad!!", "About MTE", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Form2 w = new Form2();
+            w.Show();
 
         }
         #endregion
@@ -169,7 +151,56 @@ namespace ModernTextEditor
 
         private void VersionBT_Click(object sender, EventArgs e)
         {
-            Process.Start("");
+
+        }
+
+        private void saveasButton_Click(object sender, EventArgs e)
+        {
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                File.WriteAllText(path = saveFileDialog.FileName, TextInput.Text);
+            }
+        }
+
+        private void wordWrapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (WordWrapButton.Checked == true)
+            {
+                TextInput.WordWrap = false;
+                TextInput.ScrollBars = (RichTextBoxScrollBars)ScrollBars.Both;
+                WordWrapButton.Checked = false;
+            }
+            else
+            {
+                TextInput.WordWrap = true;
+                TextInput.ScrollBars = (RichTextBoxScrollBars)ScrollBars.Vertical;
+                WordWrapButton.Checked = true;
+            }
+        }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TextInput.Cut();
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TextInput.Paste();
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TextInput.Copy();
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TextInput.SelectedText = "";
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            TextInput.SelectAll();
         }
     }
 
