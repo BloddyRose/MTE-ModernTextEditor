@@ -71,11 +71,11 @@ namespace ModernTextEditor
                 {
 
                     string filename = dialog.FileName;
-
+                    string title = dialog.SafeFileName;
                     string text = System.IO.File.ReadAllText(filename);
-
-                    // Display the file contents by using a foreach loop.
                     TextInput.Text = text;
+                    this.Text += "   " + title;
+                    this.Update();
 
                 }
             }
@@ -203,5 +203,4 @@ namespace ModernTextEditor
             TextInput.SelectAll();
         }
     }
-
 }
